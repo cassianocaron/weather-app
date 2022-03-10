@@ -97,14 +97,17 @@ const Locate = ({ getLocation, getWeather }) => {
 };
 
 const ShowWeather = ({ weather, location }) => {
+  const weatherDescription = weather.current.weather[0].description.replace(
+    /(^\w{1})|(\s+\w{1})/g,
+    (letter) => letter.toUpperCase()
+  );
+
   return (
     <main>
       <div className="weather-box">
         <div className="location">{location}</div>
         <GetTime timezone={weather.timezone} />
-        <div className="description">
-          {weather.current.weather[0].description}
-        </div>
+        <div className="description">{weatherDescription}</div>
         <div className="temp">{Math.round(weather.current.temp)}°C</div>
         <div className="feels-like">
           Feels like {Math.round(weather.current.feels_like)}°C
