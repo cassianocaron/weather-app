@@ -75,6 +75,27 @@ const Search = ({ getWeather, setLocation }) => {
   );
 };
 
+const Locate = ({ getLocation, getWeather }) => {
+  return (
+    <button
+      className="locate"
+      onClick={() => {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            getLocation({ lat, lng });
+            getWeather({ lat, lng });
+          },
+          () => null
+        );
+      }}
+    >
+      <img src="/compass.svg" alt="compass" />
+    </button>
+  );
+};
+
 const ShowWeather = ({ weather, location }) => {
   return (
     <main>
@@ -139,6 +160,14 @@ const App = () => {
       .catch((error) => console.error("Error:", error));
   };
 
+  const getLocation = ({ lat, lng }) => {
+    const reverseGeocoding = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lng}&limit=1&appid=${OPENWEATHER_API_KEY}`;
+    fetch(reverseGeocoding)
+      .then((res) => res.json())
+      .then((data) => setLocation(`${data[0].name}, ${data[0].country}`))
+      .catch((error) => console.error("Error:", error));
+  };
+
   if (loadError) return "Error loading maps";
   if (!isLoaded) return "Loading maps...";
 
@@ -146,6 +175,7 @@ const App = () => {
     <div className="app">
       <Title />
       <Search getWeather={getWeather} setLocation={setLocation} />
+      <Locate getLocation={getLocation} getWeather={getWeather} />
       {weather.current ? (
         <ShowWeather weather={weather} location={location} />
       ) : null}
