@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import usePlacesAutocomplete, {
   getGeocode,
@@ -80,7 +80,8 @@ const ShowWeather = ({ weather, location }) => {
     <main>
       <div className="weather-box">
         <div className="location">{location}</div>
-        <div className="weather-condition">
+        <GetTime timezone={weather.timezone} />
+        <div className="description">
           {weather.current.weather[0].description}
         </div>
         <div className="temp">{Math.round(weather.current.temp)}°C</div>
@@ -92,6 +93,35 @@ const ShowWeather = ({ weather, location }) => {
   );
 };
 
+const GetTime = ({ timezone }) => {
+  const [dateState, setDateState] = useState(new Date());
+
+  useEffect(() => {
+    setInterval(() => setDateState(new Date()), 1000);
+  }, []);
+
+  return (
+    <div className="datetime">
+      <div className="date">
+        {new Intl.DateTimeFormat("en-US", {
+          timeZone: timezone,
+          weekday: "long",
+          month: "long",
+          day: "2-digit",
+        }).format(dateState)}
+      </div>
+      <div className="time">
+        {new Intl.DateTimeFormat("en-US", {
+          timeZone: timezone,
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }).format(dateState)}
+      </div>
+    </div>
+  );
+};
+
 const App = () => {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -100,8 +130,6 @@ const App = () => {
   const OPENWEATHER_API_KEY = process.env.REACT_APP_OPENWEATHER_API_KEY;
   const [weather, setWeather] = useState([]);
   const [location, setLocation] = useState([]);
-  console.log(weather);
-  console.log(location);
 
   const getWeather = ({ lat, lng }) => {
     const weather = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lng}&exclude=alerts,minutely&units=metric&appid=${OPENWEATHER_API_KEY}`;
