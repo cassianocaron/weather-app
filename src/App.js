@@ -26,7 +26,7 @@ const Title = () => {
   );
 };
 
-const Search = ({ getWeather }) => {
+const Search = ({ getWeather, setLocation }) => {
   const {
     ready,
     value,
@@ -40,8 +40,9 @@ const Search = ({ getWeather }) => {
   };
 
   const handleSelect = async (address) => {
-    setValue(address, false);
+    setValue("", false);
     clearSuggestions();
+    setLocation(address);
 
     try {
       const results = await getGeocode({ address });
@@ -74,6 +75,23 @@ const Search = ({ getWeather }) => {
   );
 };
 
+const ShowWeather = ({ weather, location }) => {
+  return (
+    <main>
+      <div className="weather-box">
+        <div className="location">{location}</div>
+        <div className="weather-condition">
+          {weather.current.weather[0].description}
+        </div>
+        <div className="temp">{Math.round(weather.current.temp)}°C</div>
+        <div className="feels-like">
+          Feels like {Math.round(weather.current.feels_like)}°C
+        </div>
+      </div>
+    </main>
+  );
+};
+
 const App = () => {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -81,7 +99,9 @@ const App = () => {
   });
   const OPENWEATHER_API_KEY = process.env.REACT_APP_OPENWEATHER_API_KEY;
   const [weather, setWeather] = useState([]);
+  const [location, setLocation] = useState([]);
   console.log(weather);
+  console.log(location);
 
   const getWeather = ({ lat, lng }) => {
     const weather = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lng}&exclude=alerts,minutely&units=metric&appid=${OPENWEATHER_API_KEY}`;
@@ -95,9 +115,12 @@ const App = () => {
   if (!isLoaded) return "Loading maps...";
 
   return (
-    <div className="App">
+    <div className="app">
       <Title />
-      <Search getWeather={getWeather} />
+      <Search getWeather={getWeather} setLocation={setLocation} />
+      {weather.current ? (
+        <ShowWeather weather={weather} location={location} />
+      ) : null}
     </div>
   );
 };
