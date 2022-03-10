@@ -1,9 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Cantarell&family=Roboto&display=swap');
 
-body {
+* {
   box-sizing: border-box;
+}
+
+body {
   margin: 0;
   font-family: "Cantarell", "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.title {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  color: #252525;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+}
+
+.search {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 400px;
+  outline: none;
+  z-index: 10;
+}
+
+.search input {
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  width: 100%;
 }
