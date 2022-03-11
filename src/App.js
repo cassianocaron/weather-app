@@ -108,7 +108,15 @@ const ShowWeather = ({ weather, location }) => {
         <div className="location">{location}</div>
         <GetTime timezone={weather.timezone} />
         <div className="description">{weatherDescription}</div>
-        <div className="temp">{Math.round(weather.current.temp)}°C</div>
+        <div className="icon-temp">
+          <div className="icon">
+            <img
+              alt="weather icon"
+              src={`http://openweathermap.org/img/wn/${weather.current.weather[0].icon}@4x.png`}
+            />
+          </div>
+          <div className="temp">{Math.round(weather.current.temp)}°C</div>
+        </div>
         <div className="feels-like">
           Feels like {Math.round(weather.current.feels_like)}°C
         </div>
