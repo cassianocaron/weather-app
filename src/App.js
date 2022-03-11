@@ -12,6 +12,7 @@ import {
   ComboboxOption,
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
+import classNames from "classnames";
 import { add } from "date-fns";
 
 const libraries = ["places"];
@@ -104,27 +105,39 @@ const ShowWeather = ({ weather, location }) => {
   );
 
   return (
-    <main>
-      <div className="weather-box">
-        <div className="location">{location}</div>
-        <GetTime timezone={weather.timezone} />
-        <div className="description">{weatherDescription}</div>
-        <div className="icon-temp">
-          <div className="icon">
-            <img
-              alt="weather icon"
-              src={`http://openweathermap.org/img/wn/${weather.current.weather[0].icon}@4x.png`}
-            />
+    <main
+      className={classNames("app", {
+        rain: weather.current.weather[0].main === "Rain",
+        snow: weather.current.weather[0].main === "Snow",
+        clouds: weather.current.weather[0].main === "Clouds",
+        fewclouds: weather.current.weather[0].description === "few clouds",
+        clear: weather.current.weather[0].main === "Clear",
+        haze: weather.current.weather[0].main === "Haze",
+        mist: weather.current.weather[0].main === "Mist",
+      })}
+    >
+      <div className="main-container">
+        <div className="weather-box">
+          <div className="location">{location}</div>
+          <GetTime timezone={weather.timezone} />
+          <div className="description">{weatherDescription}</div>
+          <div className="icon-temp">
+            <div className="icon">
+              <img
+                alt="weather icon"
+                src={`http://openweathermap.org/img/wn/${weather.current.weather[0].icon}@4x.png`}
+              />
+            </div>
+            <div className="temp">{Math.round(weather.current.temp)}°C</div>
           </div>
-          <div className="temp">{Math.round(weather.current.temp)}°C</div>
-        </div>
-        <div className="feels-like">
-          Feels like {Math.round(weather.current.feels_like)}°C
-        </div>
-        <div className="hourly-forecast">
-          {[...Array(6).keys()].map((i) => (
-            <HourlyForecast index={i} weather={weather} />
-          ))}
+          <div className="feels-like">
+            Feels like {Math.round(weather.current.feels_like)}°C
+          </div>
+          <div className="hourly-forecast">
+            {[...Array(6).keys()].map((i) => (
+              <HourlyForecast index={i} weather={weather} />
+            ))}
+          </div>
         </div>
       </div>
     </main>
@@ -218,14 +231,14 @@ const App = () => {
   if (!isLoaded) return "Loading maps...";
 
   return (
-    <div className="app">
+    <>
       <Title />
       <Search getWeather={getWeather} setLocation={setLocation} />
       <Locate getLocation={getLocation} getWeather={getWeather} />
       {weather.current ? (
         <ShowWeather weather={weather} location={location} />
       ) : null}
-    </div>
+    </>
   );
 };
 
