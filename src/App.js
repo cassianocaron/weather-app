@@ -34,17 +34,6 @@ const center = {
   lng: -71.11662791545155,
 };
 
-const Title = () => {
-  return (
-    <h1 className="title">
-      Weather{" "}
-      <span role="img" aria-label="weather">
-        🌤️
-      </span>
-    </h1>
-  );
-};
-
 const Search = ({ getWeather, setLocation, map, toggleMap }) => {
   const {
     ready,
@@ -317,7 +306,6 @@ const App = () => {
 
   return (
     <>
-      <Title />
       <Search
         getWeather={getWeather}
         setLocation={setLocation}
