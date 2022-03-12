@@ -156,14 +156,20 @@ body {
   object-fit: none;
 }
 
-.weather-box .icon-temp .switch-button {
+.switch-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weather-box .icon-temp .switch {
   position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
 }
 
-.weather-box .icon-temp .switch-button input {
+.switch input {
   opacity: 0;
   width: 0;
   height: 0;
