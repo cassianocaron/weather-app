@@ -45,7 +45,7 @@ const Title = () => {
   );
 };
 
-const Search = ({ getWeather, setLocation }) => {
+const Search = ({ getWeather, setLocation, map, toggleMap }) => {
   const {
     ready,
     value,
@@ -62,6 +62,7 @@ const Search = ({ getWeather, setLocation }) => {
     setValue("", false);
     clearSuggestions();
     setLocation(address);
+    if (!map) toggleMap();
 
     try {
       const results = await getGeocode({ address });
@@ -94,7 +95,7 @@ const Search = ({ getWeather, setLocation }) => {
   );
 };
 
-const Locate = ({ getLocation, getWeather }) => {
+const Locate = ({ getLocation, getWeather, map, toggleMap }) => {
   return (
     <button
       className="locate"
@@ -106,6 +107,7 @@ const Locate = ({ getLocation, getWeather }) => {
             const lng = position.coords.longitude;
             getLocation({ lat, lng });
             getWeather({ lat, lng });
+            if (!map) toggleMap();
           },
           () => null
         );
@@ -124,7 +126,7 @@ const ShowWeather = ({ weather, location, unit, toggleUnit }) => {
 
   const getUnit = () => (unit ? "°F" : "°C");
 
-  const convertToFarenheits = (temp) => Math.round((temp * 9) / 5) + 32;
+  const convertToFahrenheit = (temp) => Math.round((temp * 9) / 5) + 32;
 
   return (
     <main
@@ -152,7 +154,7 @@ const ShowWeather = ({ weather, location, unit, toggleUnit }) => {
             </div>
             <div className="temp">
               {unit
-                ? convertToFarenheits(Math.round(weather.current.temp))
+                ? convertToFahrenheit(Math.round(weather.current.temp))
                 : Math.round(weather.current.temp)}
               {getUnit()}
             </div>
@@ -161,7 +163,7 @@ const ShowWeather = ({ weather, location, unit, toggleUnit }) => {
           <div className="feels-like">
             Feels like{" "}
             {unit
-              ? convertToFarenheits(Math.round(weather.current.feels_like))
+              ? convertToFahrenheit(Math.round(weather.current.feels_like))
               : Math.round(weather.current.feels_like)}
             {getUnit()}
           </div>
@@ -171,7 +173,7 @@ const ShowWeather = ({ weather, location, unit, toggleUnit }) => {
                 index={i}
                 weather={weather}
                 unit={unit}
-                convertToFarenheits={convertToFarenheits}
+                convertToFahrenheit={convertToFahrenheit}
               />
             ))}
           </div>
@@ -230,7 +232,7 @@ const GetTime = ({ timezone }) => {
   );
 };
 
-const HourlyForecast = ({ index, weather, unit, convertToFarenheits }) => {
+const HourlyForecast = ({ index, weather, unit, convertToFahrenheit }) => {
   const addHour = (hour) => {
     const date = add(new Date(), { hours: hour });
     return new Intl.DateTimeFormat("en-US", {
@@ -250,7 +252,7 @@ const HourlyForecast = ({ index, weather, unit, convertToFarenheits }) => {
       </div>
       <div>
         {unit
-          ? convertToFarenheits(Math.round(weather.hourly[index].temp))
+          ? convertToFahrenheit(Math.round(weather.hourly[index].temp))
           : Math.round(weather.hourly[index].temp)}
         °
       </div>
@@ -274,8 +276,11 @@ const App = () => {
   const [weather, setWeather] = useState([]);
   const [location, setLocation] = useState([]);
   const [unit, setUnit] = useState(false);
+  const [map, setMap] = useState(false);
 
   const toggleUnit = () => setUnit(!unit);
+
+  const toggleMap = () => setMap(!map);
 
   const onMapClick = useCallback((e) => {
     const lat = e.latLng.lat();
@@ -283,6 +288,7 @@ const App = () => {
     setMarkers(() => [{ lat, lng }]);
     getWeather({ lat, lng });
     getLocation({ lat, lng });
+    toggleMap();
   }, []);
 
   const mapRef = useRef();
@@ -312,9 +318,28 @@ const App = () => {
   return (
     <>
       <Title />
-      <Search getWeather={getWeather} setLocation={setLocation} />
-      <Locate getLocation={getLocation} getWeather={getWeather} />
-      {weather.current ? (
+      <Search
+        getWeather={getWeather}
+        setLocation={setLocation}
+        map={map}
+        toggleMap={toggleMap}
+      />
+      <Locate
+        getLocation={getLocation}
+        getWeather={getWeather}
+        map={map}
+        toggleMap={toggleMap}
+      />
+      <button
+        className="toggle-map"
+        title="Show/hide map"
+        onClick={() => {
+          toggleMap();
+        }}
+      >
+        <img src="/map.png" alt="map icon" />
+      </button>
+      {map && weather.current ? (
         <ShowWeather
           weather={weather}
           location={location}

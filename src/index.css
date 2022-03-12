@@ -21,6 +21,20 @@ body {
   padding: 0;
 }
 
+.toggle-map {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  z-index: 10;
+}
+
+.toggle-map > img {
+  width: 35px;
+  cursor: pointer;
+}
+
 .search {
   position: absolute;
   top: 1rem;
