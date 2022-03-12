@@ -98,6 +98,7 @@ const Locate = ({ getLocation, getWeather }) => {
   return (
     <button
       className="locate"
+      title="Get current Location"
       onClick={() => {
         navigator.geolocation.getCurrentPosition(
           (position) => {
