@@ -277,7 +277,7 @@ const App = () => {
     setMarkers(() => [{ lat, lng }]);
     getWeather({ lat, lng });
     getLocation({ lat, lng });
-    toggleMap();
+    if (!map) toggleMap();
   }, []);
 
   const mapRef = useRef();
