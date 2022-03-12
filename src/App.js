@@ -51,7 +51,7 @@ const Search = ({ getWeather, setLocation, map, toggleMap }) => {
     setValue("", false);
     clearSuggestions();
     setLocation(address);
-    if (!map) toggleMap();
+    if (map) toggleMap();
 
     try {
       const results = await getGeocode({ address });
@@ -96,7 +96,7 @@ const Locate = ({ getLocation, getWeather, map, toggleMap }) => {
             const lng = position.coords.longitude;
             getLocation({ lat, lng });
             getWeather({ lat, lng });
-            if (!map) toggleMap();
+            if (map) toggleMap();
           },
           () => null
         );
@@ -265,11 +265,14 @@ const App = () => {
   const [weather, setWeather] = useState([]);
   const [location, setLocation] = useState([]);
   const [unit, setUnit] = useState(false);
-  const [map, setMap] = useState(false);
+  const [map, setMap] = useState(true);
+  console.log(map);
 
   const toggleUnit = () => setUnit(!unit);
 
-  const toggleMap = () => setMap(!map);
+  const toggleMap = () => {
+    map ? setMap(false) : setMap(true);
+  };
 
   const onMapClick = useCallback((e) => {
     const lat = e.latLng.lat();
@@ -277,7 +280,7 @@ const App = () => {
     setMarkers(() => [{ lat, lng }]);
     getWeather({ lat, lng });
     getLocation({ lat, lng });
-    if (!map) toggleMap();
+    if (map) toggleMap();
   }, []);
 
   const mapRef = useRef();
@@ -327,7 +330,7 @@ const App = () => {
       >
         <img src="/map.png" alt="map icon" />
       </button>
-      {map && weather.current ? (
+      {!map && weather.current ? (
         <ShowWeather
           weather={weather}
           location={location}
