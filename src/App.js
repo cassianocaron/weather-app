@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useLoadScript } from "@react-google-maps/api";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
@@ -12,10 +12,27 @@ import {
   ComboboxOption,
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
+import mapStyles from "./mapStyles";
 import classNames from "classnames";
 import { add } from "date-fns";
 
 const libraries = ["places"];
+
+const mapContainerStyle = {
+  height: "100vh",
+  width: "100wh",
+};
+
+const options = {
+  styles: mapStyles,
+  disableDefaultUI: true,
+  zoomControl: true,
+};
+
+const center = {
+  lat: 42.37703458185478,
+  lng: -71.11662791545155,
+};
 
 const Title = () => {
   return (
@@ -208,8 +225,22 @@ const App = () => {
     libraries,
   });
   const OPENWEATHER_API_KEY = process.env.REACT_APP_OPENWEATHER_API_KEY;
+  const [markers, setMarkers] = useState([]);
   const [weather, setWeather] = useState([]);
   const [location, setLocation] = useState([]);
+
+  const onMapClick = useCallback((e) => {
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+    setMarkers(() => [{ lat, lng }]);
+    getWeather({ lat, lng });
+    getLocation({ lat, lng });
+  }, []);
+
+  const mapRef = useRef();
+  const onMapLoad = useCallback((map) => {
+    mapRef.current = map;
+  }, []);
 
   const getWeather = ({ lat, lng }) => {
     const weather = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lng}&exclude=alerts,minutely&units=metric&appid=${OPENWEATHER_API_KEY}`;
@@ -237,7 +268,24 @@ const App = () => {
       <Locate getLocation={getLocation} getWeather={getWeather} />
       {weather.current ? (
         <ShowWeather weather={weather} location={location} />
-      ) : null}
+      ) : (
+        <GoogleMap
+          id="map"
+          mapContainerStyle={mapContainerStyle}
+          zoom={5}
+          center={center}
+          options={options}
+          onClick={onMapClick}
+          onLoad={onMapLoad}
+        >
+          {markers.map((marker) => (
+            <Marker
+              key={`${marker.lat}-${marker.lng}`}
+              position={{ lat: marker.lat, lng: marker.lng }}
+            />
+          ))}
+        </GoogleMap>
+      )}
     </>
   );
 };
