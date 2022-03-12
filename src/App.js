@@ -116,11 +116,15 @@ const Locate = ({ getLocation, getWeather }) => {
   );
 };
 
-const ShowWeather = ({ weather, location }) => {
+const ShowWeather = ({ weather, location, unit, toggleUnit }) => {
   const weatherDescription = weather.current.weather[0].description.replace(
     /(^\w{1})|(\s+\w{1})/g,
     (letter) => letter.toUpperCase()
   );
+
+  const getUnit = () => (unit ? "°F" : "°C");
+
+  const convertToFarenheits = (temp) => Math.round((temp * 9) / 5) + 32;
 
   return (
     <main
@@ -146,19 +150,54 @@ const ShowWeather = ({ weather, location }) => {
                 src={`http://openweathermap.org/img/wn/${weather.current.weather[0].icon}@4x.png`}
               />
             </div>
-            <div className="temp">{Math.round(weather.current.temp)}°C</div>
+            <div className="temp">
+              {unit
+                ? convertToFarenheits(Math.round(weather.current.temp))
+                : Math.round(weather.current.temp)}
+              {getUnit()}
+            </div>
+            <SwitchUnit unit={unit} toggleUnit={() => toggleUnit()} />
           </div>
           <div className="feels-like">
-            Feels like {Math.round(weather.current.feels_like)}°C
+            Feels like{" "}
+            {unit
+              ? convertToFarenheits(Math.round(weather.current.feels_like))
+              : Math.round(weather.current.feels_like)}
+            {getUnit()}
           </div>
           <div className="hourly-forecast">
             {[...Array(6).keys()].map((i) => (
-              <HourlyForecast index={i} weather={weather} />
+              <HourlyForecast
+                index={i}
+                weather={weather}
+                unit={unit}
+                convertToFarenheits={convertToFarenheits}
+              />
             ))}
           </div>
         </div>
       </div>
     </main>
+  );
+};
+
+const SwitchUnit = ({ unit, toggleUnit }) => {
+  return (
+    <div className="switch-button">
+      <label className="switch">
+        <input
+          onChange={() => toggleUnit()}
+          checked={unit}
+          type="checkbox"
+        ></input>
+        <span className="slider round">
+          <div>
+            <span>C</span>
+            <span>F</span>
+          </div>
+        </span>
+      </label>
+    </div>
   );
 };
 
@@ -191,7 +230,7 @@ const GetTime = ({ timezone }) => {
   );
 };
 
-const HourlyForecast = ({ index, weather }) => {
+const HourlyForecast = ({ index, weather, unit, convertToFarenheits }) => {
   const addHour = (hour) => {
     const date = add(new Date(), { hours: hour });
     return new Intl.DateTimeFormat("en-US", {
@@ -209,7 +248,12 @@ const HourlyForecast = ({ index, weather }) => {
           src={`http://openweathermap.org/img/wn/${weather.hourly[index].weather[0].icon}@2x.png`}
         />
       </div>
-      <div>{Math.round(weather.hourly[index].temp)}°</div>
+      <div>
+        {unit
+          ? convertToFarenheits(Math.round(weather.hourly[index].temp))
+          : Math.round(weather.hourly[index].temp)}
+        °
+      </div>
       <div className="pop">
         <div className="rain-icon">
           <img alt="rain icon" src="/drop.svg" />
@@ -229,6 +273,9 @@ const App = () => {
   const [markers, setMarkers] = useState([]);
   const [weather, setWeather] = useState([]);
   const [location, setLocation] = useState([]);
+  const [unit, setUnit] = useState(false);
+
+  const toggleUnit = () => setUnit(!unit);
 
   const onMapClick = useCallback((e) => {
     const lat = e.latLng.lat();
@@ -268,7 +315,12 @@ const App = () => {
       <Search getWeather={getWeather} setLocation={setLocation} />
       <Locate getLocation={getLocation} getWeather={getWeather} />
       {weather.current ? (
-        <ShowWeather weather={weather} location={location} />
+        <ShowWeather
+          weather={weather}
+          location={location}
+          unit={unit}
+          toggleUnit={toggleUnit}
+        />
       ) : (
         <GoogleMap
           id="map"
