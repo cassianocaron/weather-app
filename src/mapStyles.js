@@ -1,3 +1,5 @@
+// https://snazzymaps.com/style/8097/wy
+
 const mapStyles = [
   {
     featureType: "all",
