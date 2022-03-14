@@ -8,7 +8,7 @@ A web-based weather app created with React JavaScript library. It has integratio
 
 #### Required Packages
 
-For this app to work we need to install a few packages:
+For this app to work a few packages are required:
 
 - Google Maps: https://www.npmjs.com/package/@react-google-maps/api
 - Google Places React: https://www.npmjs.com/package/use-places-autocomplete
@@ -17,13 +17,13 @@ For this app to work we need to install a few packages:
 
 #### API Keys
 
-We need to create a Google Maps API Key at https://console.cloud.google.com/, and ensure that the services below are enabled.
+Please create a Google Maps API Key at https://console.cloud.google.com/, and ensure that the services below are enabled.
 
 - Maps JavaScript API
 - Places API
 - Geocoding API
 
-We also need to create a OpenWeatherMap API key at https://openweathermap.org/api.
+Also create a OpenWeatherMap API key at https://openweathermap.org/api.
 
 These API keys must be in the environment variables `REACT_APP_GOOGLE_PLACES_API_KEY` and `REACT_APP_OPENWEATHER_API_KEY`.
 
