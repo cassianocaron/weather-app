@@ -34,6 +34,20 @@ const center = {
   lng: -71.11662791545155,
 };
 
+const MapButton = ({ toggleMap }) => {
+  return (
+    <button
+      className="toggle-map"
+      title="Show/hide map"
+      onClick={() => {
+        toggleMap();
+      }}
+    >
+      <img src="/map.png" alt="map icon" />
+    </button>
+  );
+};
+
 const Search = ({ getWeather, setLocation, map, toggleMap }) => {
   const {
     ready,
@@ -308,6 +322,7 @@ const App = () => {
 
   return (
     <>
+      <MapButton toggleMap={toggleMap} />
       <Search
         getWeather={getWeather}
         setLocation={setLocation}
@@ -320,15 +335,6 @@ const App = () => {
         map={map}
         toggleMap={toggleMap}
       />
-      <button
-        className="toggle-map"
-        title="Show/hide map"
-        onClick={() => {
-          toggleMap();
-        }}
-      >
-        <img src="/map.png" alt="map icon" />
-      </button>
       {!map && weather.current ? (
         <ShowWeather
           weather={weather}
