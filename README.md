@@ -1,70 +1,57 @@
-# Getting Started with Create React App
+# WEATHER APP
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#### Video Demo: video url
 
-## Available Scripts
+#### Description
 
-In the project directory, you can run:
+A web-based weather app created with React JavaScript library. It has integration with Google Maps, Google Places and OpenWeatherMap.
 
-### `npm start`
+##### Required Packages
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+For this app to work we need to install a few packages:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Google Maps: https://www.npmjs.com/package/@react-google-maps/api
+- Google Places React: https://www.npmjs.com/package/use-places-autocomplete
+- Reach Combobox: https://reach.tech/combobox/
+- Date-fns: https://www.npmjs.com/package/date-fns
 
-### `npm test`
+##### API Keys
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+We need to create a Google Maps API Key at https://console.cloud.google.com/, and ensure that the services below are enabled.
 
-### `npm run build`
+- Maps JavaScript API
+- Places API
+- Geocoding API
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+We also need to create a OpenWeatherMap API key at https://openweathermap.org/api.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+These API keys must be in the environment variables `REACT_APP_GOOGLE_PLACES_API_KEY` and `REACT_APP_OPENWEATHER_API_KEY`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+##### Usage
+After creating the API keys and placing them into a .env.local file in the root folder, to run the app simply type in **npm start** in the console and a browser window will open, but please note that you need to install [node.js](https://nodejs.org/en/) first.
 
-### `npm run eject`
+When the app is loaded for the first time the google maps is displayed by default, to get the weather for a particular location there are two options: either click on the google maps to select a location or start typing in the search bar and the suggestions will start appearing. Once a location is selected the page will render the weather data, showing the location name, the current time at that location, weather condition, temperature, feels like and hourly forecast for the next six hours. There's also a button to switch the units between Celsius and Fahrenheit.
+To search for a new location, simply start typing in the search bar and select a result or click the map icon at the top left corner to display google maps and click on a location. To get the weather for your current location, click the compass icon at the top right corner and allow the browser to detect your location.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+##### App.js
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+This is the main file, which contains all the logic used to fetch and display weather and google maps data to the page. It starts by importing all required packages, and then defining the components.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **App**
+  The main component, which is used to render all the other components. All the functions required to render the Google Maps are defined here, as well as the functions to handle input from the user. The functions to call the weather API are also defined here.
+  The first components to be rendered are the map icon, the search bar and the current location button.
+  Using a ternary operator, we check if weather data was fetched and the google maps is being shown to either render the google maps or the weather data.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **MapButton**
+  Component used to render the map icon at the top left corner. When clicked it shows/hide the map.
 
-## Learn More
+- **Search**
+  Component used to render the suggestions as you type in the search bar, powered by google places API. As soon as a location is clicked from the drop down list the weather API is called to render weather data.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **Locate**
+  Used to get the user's current position and display the weather data.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **ShowWeather**
+  All the components needed to show the weather are defined here. From the OpenWeatherMap API we get all the information needed, such as current temperature, time zone, weather condition, hourly forecast, etc. To get the current time for the location being fetched was a bit of a challenge. The **GetTime** component is responsible for doing that, using the [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat) object, which enables language-sensitive date and time formatting.  
+  The **SwitchUnit** component is responsible for rendering the button used to switch between Celsius and Fahrenheit.
+  And finally, the **HourlyForecast** component is used to render the hourly forecast for the next 6 hours. This one was a lot harder than I expected to finish, because I needed to add one hour to the current time of the current location and then two hours and so on up to six hours. Thankfully, I found the [date-fns](https://date-fns.org/docs/Getting-Started) package which does exactly that via a add function taking two arguments: the time and the number of hours to be added to it. The new time is then formatted with the Intl.DateTimeFormat object to the time zone from the current location.
