@@ -266,7 +266,6 @@ const App = () => {
   const [location, setLocation] = useState([]);
   const [unit, setUnit] = useState(false);
   const [map, setMap] = useState(true);
-  console.log(map);
 
   const toggleUnit = () => setUnit(!unit);
 
