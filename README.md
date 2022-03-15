@@ -1,7 +1,5 @@
 # WEATHER APP
 
-### Video Demo: https://youtu.be/9xJRKJMmt9A
-
 ### Description
 
 A web-based weather app created with React JavaScript library. It has integration with Google Maps, Google Places and OpenWeatherMap.
