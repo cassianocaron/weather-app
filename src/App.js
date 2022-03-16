@@ -173,6 +173,7 @@ const ShowWeather = ({ weather, location, unit, toggleUnit }) => {
           <div className="hourly-forecast">
             {[...Array(6).keys()].map((i) => (
               <HourlyForecast
+                key={i}
                 index={i}
                 weather={weather}
                 unit={unit}
