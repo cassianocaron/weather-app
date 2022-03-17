@@ -46,16 +46,16 @@ To search for a new location, simply start typing in the search bar and select a
     The first components to be rendered are the map icon, the search bar and the current location button.
     Using a ternary operator, we check if weather data was fetched and the google maps is being shown to either render the google maps or the weather data.
 
-  - **MapButton**
+  - **components/MapButton**
     Component used to render the map icon at the top left corner. When clicked it shows/hide the map.
 
-  - **Search**
+  - **components/Search**
     Component used to render the suggestions as you type in the search bar, powered by google places API. As soon as a location is clicked from the drop down list the weather API is called to render weather data.
 
-  - **Locate**
+  - **components/Locate**
     Used to get the user's current position and display the weather data.
 
-  - **ShowWeather**
+  - **components/ShowWeather**
     All the components needed to show the weather are defined here. From the OpenWeatherMap API we get all the information needed, such as current temperature, time zone, weather condition, hourly forecast, etc. To get the current time for the location being fetched was a bit of a challenge. The **GetTime** component is responsible for doing that, using the [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat) object, which enables language-sensitive date and time formatting.  
     The **SwitchUnit** component is responsible for rendering the button used to switch between Celsius and Fahrenheit.
     And finally, the **HourlyForecast** component is used to render the hourly forecast for the next 6 hours. This one was a lot harder than I expected to finish, because I needed to add one hour to the current time of the current location and then two hours and so on up to six hours. Thankfully, I found the [date-fns](https://date-fns.org/docs/Getting-Started) package which does exactly that via a add function taking two arguments: the time and the number of hours to be added to it. The new time is then formatted with the Intl.DateTimeFormat object to the time zone from the current location.
