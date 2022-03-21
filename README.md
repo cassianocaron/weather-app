@@ -4,15 +4,6 @@
 
 A web-based weather app created with React JavaScript library. It has integration with Google Maps, Google Places and OpenWeatherMap.
 
-#### Required Packages
-
-For this app to work a few packages are required:
-
-- Google Maps: https://www.npmjs.com/package/@react-google-maps/api
-- Google Places React: https://www.npmjs.com/package/use-places-autocomplete
-- Reach Combobox: https://reach.tech/combobox/
-- Date-fns: https://www.npmjs.com/package/date-fns
-
 #### API Keys
 
 Please create a Google Maps API Key at https://console.cloud.google.com/, and ensure that the services below are enabled.
@@ -27,7 +18,7 @@ These API keys must be in the environment variables `REACT_APP_GOOGLE_PLACES_API
 
 #### Usage
 
-After creating the API keys and placing them into a .env.local file in the root folder, to run the app simply type in **npm start** in the console and a browser window will open, but please note that you need to install [node.js](https://nodejs.org/en/) first.
+After creating the API keys and placing them into a .env.local file in the root folder, to start the app type **npm install** in a terminal window to install the project dependencies, then type **npm start** and a browser window will open, but please note that you need to install [node.js](https://nodejs.org/en/) first.
 
 When the app is loaded for the first time the google maps is displayed by default, to get the weather for a particular location there are two options: either click on the google maps to select a location or start typing in the search bar and the suggestions will start appearing. Once a location is selected the page will render the weather data, showing the location name, the current time at that location, weather condition, temperature, feels like and hourly forecast for the next six hours. There's also a button to switch the units between Celsius and Fahrenheit.  
 To search for a new location, simply start typing in the search bar and select a result or click the map icon at the top left corner to display google maps and click on a location. To get the weather for your current location, click the compass icon at the top right corner and allow the browser to detect your location.
